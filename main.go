@@ -62,38 +62,36 @@ func runCmd() *cobra.Command {
 
 func encryptCmd() *cobra.Command {
 	var envFilesPaths []string
+	var envKeysFilePath string
 
 	cmd := &cobra.Command{
 		Use:   "encrypt",
 		Short: "Convert plain .env file(s) to encrypted .env file(s)",
 		Run: func(cmd *cobra.Command, args []string) {
-			if len(envFilesPaths) == 0 {
-				envFilesPaths = []string{"sample-files/.env.sample"}
-			}
-			services.Encrypt(envFilesPaths, "sample-files/.env.keys")
+			services.Encrypt(envFilesPaths, envKeysFilePath)
 		},
 	}
 
-	cmd.Flags().StringSliceVarP(&envFilesPaths, "env-file", "f", []string{}, "path(s) to your plain env file(s)")
+	cmd.Flags().StringSliceVarP(&envFilesPaths, "env-file", "f", []string{".env"}, "path(s) to your plain env file(s)")
+	cmd.Flags().StringVarP(&envKeysFilePath, "env-keys-file", "fk", ".env.keys", "paths to you .env.keys file")
 
 	return cmd
 }
 
 func decryptCmd() *cobra.Command {
 	var envFilesPaths []string
+	var envKeysFilePath string
 
 	cmd := &cobra.Command{
 		Use:   "decrypt",
 		Short: "Convert encrypted .env file(s) to plain .env file(s)",
 		Run: func(cmd *cobra.Command, args []string) {
-			if len(envFilesPaths) == 0 {
-				envFilesPaths = []string{"sample-files/.env.sample"}
-			}
-			services.Decrypt(envFilesPaths, "sample-files/.env.keys")
+			services.Decrypt(envFilesPaths, envKeysFilePath)
 		},
 	}
 
-	cmd.Flags().StringSliceVarP(&envFilesPaths, "env-file", "f", []string{}, "path(s) to your encrypted env file(s)")
+	cmd.Flags().StringSliceVarP(&envFilesPaths, "env-file", "f", []string{".env"}, "path(s) to your encrypted env file(s)")
+	cmd.Flags().StringVarP(&envKeysFilePath, "env-keys-file", "fk", ".env.keys", "paths to you .env.keys file")
 
 	return cmd
 }
